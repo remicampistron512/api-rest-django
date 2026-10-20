@@ -3,11 +3,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from shop.models import Category, Product, Article
-from shop.serializers import CategoryDetailSerializer,CategoryListSerializer, ProductSerializer, ArticleSerializer
+from shop.serializers import CategoryDetailSerializer,CategoryListSerializer, ProductListSerializer,ProductDetailSerializer,ArticleSerializer
 
 
 class ProductViewset(ReadOnlyModelViewSet):
-    serializer_class = ProductSerializer
+    serializer_class = ProductListSerializer
 
     def get_queryset(self):
         # Nous récupérons tous les produits dans une variable nommée queryset

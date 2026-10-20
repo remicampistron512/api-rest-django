@@ -20,6 +20,10 @@ class ProductViewset(ReadOnlyModelViewSet):
             queryset = queryset.filter(category_id=category_id)
         return queryset
 
+    @action(detail=True, methods=['post'])
+    def disable(self, request, pk):
+        self.get_object().disable()
+        return Response()
 
 class ArticleViewset(ReadOnlyModelViewSet):
     serializer_class = ArticleSerializer

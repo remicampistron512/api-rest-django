@@ -38,6 +38,16 @@ class Product(models.Model):
         return self.name
 
 
+    @transaction.atomic
+    def disable(self):
+        if self.active is False:
+            # Ne faisons rien si la catégorie est déjà désactivée
+            return
+        self.active = False
+        self.save()
+        self.articles.update(active=False)
+
+
 class Article(models.Model):
 
     date_created = models.DateTimeField(auto_now_add=True)

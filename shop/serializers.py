@@ -6,10 +6,16 @@ from shop.models import Category, Product, Article
 
 
 
-class ProductSerializer(ModelSerializer):
+class ProductSerializer(serializers.ModelSerializer):
+    articles = serializers.SerializerMethodField()
     class Meta:
         model = Product
-        fields = ['id','date_created','date_updated','name']
+        fields = ['id','date_created','date_updated','name','articles']
+
+    def get_articles(self,instance):
+        queryset = instance.articles.filter(active=True)
+        serializer = ArticleSerializer(queryset, many=True)
+        return serializer.data
 
 class ArticleSerializer(ModelSerializer):
     class Meta:

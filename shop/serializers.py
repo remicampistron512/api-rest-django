@@ -16,27 +16,33 @@ class ProductDetailSerializer(serializers.ModelSerializer):
         serializer = ArticleListSerializer(queryset, many=True)
         return serializer.data
 
+
 class ProductListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ['id', 'date_created', 'date_updated', 'name']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'category', 'ecoscore']
+
 
 class ArticleListSerializer(ModelSerializer):
     class Meta:
         model = Article
         fields = ['id', 'date_created', 'date_updated', 'name', 'price', 'product']
-    def validate_price(self,value):
+
+    def validate_price(self, value):
         if value < 1:
             raise serializers.ValidationError('Price must be higher than 1')
         return value
-    def validate_product(self,value):
+
+    def validate_product(self, value):
         if value.active is False:
             raise serializers.ValidationError('Product must be active')
         return value
+
+
 class CategoryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
-        fields = ['id', 'date_created', 'date_updated', 'name','description']
+        fields = ['id', 'date_created', 'date_updated', 'name', 'description']
 
     def validate_name(self, value):
         # Nous vérifions que la catégorie existe

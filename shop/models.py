@@ -1,8 +1,8 @@
+import requests
 from django.db import models, transaction
 
 
 class Category(models.Model):
-
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -24,7 +24,6 @@ class Category(models.Model):
 
 
 class Product(models.Model):
-
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
@@ -37,7 +36,6 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
-
     @transaction.atomic
     def disable(self):
         if self.active is False:
@@ -47,9 +45,21 @@ class Product(models.Model):
         self.save()
         self.articles.update(active=False)
 
+    def call_external_api(self, method, url):
+        # l'appel doit être le plus petit possible car appliquer un mock va réduire la couverture de tests
+        # C'est cette méthode qui va être monkey patchée
+        return requests.request(method, url)
+
+    @property  # type: ignore
+    def ecoscore(self):
+        # Nous réalisons l'appel à open food fact
+        response = self.call_external_api('GET', 'https://world.openfoodfacts.org/api/v0/product/3229820787015.json')
+        if response.status_code == 200:
+            # et ne renvoyons l'écoscore que si la réponse est valide
+            return response.json()['product']['ecoscore_grade']
+
 
 class Article(models.Model):
-
     date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 

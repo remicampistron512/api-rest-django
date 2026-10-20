@@ -21,8 +21,12 @@ class ArticleSerializer(ModelSerializer):
     class Meta:
         model = Article
         fields = ['id','date_created','date_updated','name','price','product']
+class CategoryListSerializer(serializers.ModelSerializer):
 
-class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = ['id','date_created', 'date_updated','name']
+class CategoryDetailSerializer(serializers.ModelSerializer):
     products = serializers.SerializerMethodField()
     class Meta:
         model = Category

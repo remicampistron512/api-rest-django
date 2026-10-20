@@ -3,8 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
-from shop.permissions import IsAdminAuthenticated
-
+from shop.permissions import IsAdminAuthenticated, IsStaffAuthenticated
 
 from shop.models import Category, Product, Article
 from shop.serializers import CategoryDetailSerializer, CategoryListSerializer, ProductListSerializer, \
@@ -73,7 +72,7 @@ class CategoryViewset(ReadOnlyModelViewSet):
 class AdminCategoryViewset(MultipleSerializerMixin, ModelViewSet):
     serializer_class = CategoryListSerializer
     detail_serializer_class = CategoryDetailSerializer
-    permission_classes = [IsAdminAuthenticated]
+    permission_classes = [IsAdminAuthenticated, IsStaffAuthenticated]
 
     def get_queryset(self):
         return Category.objects.all()
